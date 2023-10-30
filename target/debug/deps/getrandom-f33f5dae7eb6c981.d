@@ -1,0 +1,12 @@
+/Users/leon/Documents/EroBot/target/debug/deps/getrandom-f33f5dae7eb6c981.rmeta: /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/lib.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/error.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/util.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/util_libc.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/use_file.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/macos.rs
+
+/Users/leon/Documents/EroBot/target/debug/deps/libgetrandom-f33f5dae7eb6c981.rlib: /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/lib.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/error.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/util.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/util_libc.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/use_file.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/macos.rs
+
+/Users/leon/Documents/EroBot/target/debug/deps/getrandom-f33f5dae7eb6c981.d: /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/lib.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/error.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/util.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/util_libc.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/use_file.rs /Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/macos.rs
+
+/Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/lib.rs:
+/Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/error.rs:
+/Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/util.rs:
+/Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/util_libc.rs:
+/Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/use_file.rs:
+/Users/leon/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.10/src/macos.rs:
