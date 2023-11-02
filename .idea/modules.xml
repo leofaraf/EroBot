@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EroBot.iml" filepath="$PROJECT_DIR$/EroBot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/EroBot.iml" filepath="$PROJECT_DIR$/.idea/EroBot.iml" />
     </modules>
   </component>
 </project>
