@@ -2,8 +2,11 @@ use std::thread;
 use teloxide::Bot;
 use teloxide::prelude::{Requester, ResponseResult};
 use teloxide::{prelude::*, utils::command::BotCommands};
+use teloxide::dispatching::dialogue::InMemStorage;
 use teloxide::dptree::case;
 use teloxide::types::{ButtonRequest, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, KeyboardMarkup, Message, WebAppInfo};
+use crate::db;
+use crate::db::models::User;
 
 type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
 
@@ -75,7 +78,21 @@ async fn start(bot: Bot, msg: Message) -> HandlerResult {
 }
 
 async fn vip(bot: Bot, msg: Message) -> HandlerResult {
-    bot.send_message(msg.chat.id, "Тут будет реализованна оплата по карте").await?;
+    let users = db::get_users().await;
+    let current_user = msg.from().expect("User from VIP command wasn't received");
+
+    let users: Vec<User> = users.into_iter()
+        .filter(|user| user.tg_id.to_string() == current_user.id.to_string())
+        .collect();
+
+    match users.first() {
+        Some(user) => {
+            bot.send_message(msg.chat.id, "Вы уже VIP, спасибо за поддержку нашего сервиса!").await?;
+        },
+        None => {
+            bot.send_message(msg.chat.id, "Вы еще не VIP. Тут будет реализованна оплата по карте").await?;
+        }
+    }
     Ok(())
 }
 
