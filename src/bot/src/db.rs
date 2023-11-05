@@ -41,13 +41,18 @@ pub async fn flush_models(models: Vec<Model>) {
 }
 
 pub async fn get_models() -> Vec<Model> {
-    let text = get_models_as_str().await;
-    let models: Vec<Model> = serde_json::from_str(text.as_str()).unwrap();
-    models
+    let mut text = get_models_as_str().await;
+    if let Some(text) = text {
+        let models = serde_json::from_str(text.as_str());
+        if let Ok(models) = models {
+            return models
+        }
+    }
+    vec![]
 }
 
-pub async fn get_models_as_str() -> String {
-    std::fs::read_to_string(MODELS_DB_PATH).unwrap()
+pub async fn get_models_as_str() -> Option<String> {
+    std::fs::read_to_string(MODELS_DB_PATH).ok()
 }
 
 // async fn remove_file(file_path: &str) {

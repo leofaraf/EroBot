@@ -18,14 +18,14 @@ pub enum UserRole {
 pub struct Model {
     pub id: Uuid,
     pub name: String,
-    pub photo_path: String,
+    pub media: Media,
     pub posts: Vec<Post>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Post {
     pub name: String,
-    pub media: String,
+    pub media: Media,
     pub is_vip: bool
 }
 

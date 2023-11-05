@@ -63,6 +63,7 @@ pub async fn add_new_vip(bot: Bot, msg: Message, dialogue: MyDialogue, state: Ad
                         name: text.to_string(),
                     } );
                     db::flush_users(users).await;
+                    dialogue.exit().await?;
                     bot.send_message(msg.chat.id, "Успешно. Выходим в главное меню, \
                     можете написать /start, чтобы продолжить!").await?;
                 },
