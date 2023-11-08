@@ -1,6 +1,7 @@
 use teloxide::dispatching::dialogue::InMemStorage;
 use teloxide::macros::BotCommands as Commands;
 use teloxide::prelude::Dialogue;
+use crate::db::models::{Media, MediaType, Model, ModelCategory};
 
 pub type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
 pub type MyDialogue = Dialogue<State, InMemStorage<State>>;
@@ -25,11 +26,31 @@ pub enum AddNewVipState {
     AwaitName {id: isize}
 }
 
+#[derive(Clone)]
+pub enum ChangeModelType {
+    AwaitCallback,
+    AwaitName,
+    AwaitCategory,
+    AwaitPhoto,
+    AwaitPostAction,
+    AwaitPostName,
+    AwaitPostStatus {name: String},
+    AwaitPostMediaType {name: String, status: bool},
+    AwaitPostMedia {name: String, status: bool, media_type: MediaType},
+}
+
+#[derive(Clone)]
+pub struct ChangeModelState {
+    pub model: Model,
+    pub type_of_await: ChangeModelType
+}
+
 
 #[derive(Clone)]
 pub enum AddNewModelState {
     ReceiveModelName,
-    ReceiveModelPhoto {name: String}
+    ReceiveModelCategory {name: String},
+    ReceiveModelPhoto {name: String, category: ModelCategory}
 }
 
 #[derive(Clone, Default)]
@@ -39,7 +60,7 @@ pub enum State {
     Models,
     AddNewModel {state: AddNewModelState},
     RemoveModel,
-    ChangeModel,
+    ChangeModel {state: ChangeModelState},
     Vip,
     AddNewVip {state: AddNewVipState},
     RemoveVip

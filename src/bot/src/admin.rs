@@ -15,7 +15,7 @@ use teloxide::payloads::{CopyMessageSetters, SendDiceSetters};
 use teloxide::prelude::{CallbackQuery, Dialogue, Dispatcher, Requester};
 use teloxide::types::{InlineKeyboardButton, InlineKeyboardMarkup, Message, Update};
 use teloxide::utils::command::BotCommands;
-use crate::admin::models::{add_new_model, callback_change_models, callback_models, models};
+use crate::admin::models::{add_new_model, callback_add_new_model, callback_change_models, callback_models, change_model, models};
 use crate::admin::types::{AddNewVipState, Command, HandlerResult, MyDialogue, State};
 use crate::admin::vip::{add_new_vip, callback_vip, remove_vip, vip};
 
@@ -47,14 +47,16 @@ fn schema() -> UpdateHandler<Box<dyn std::error::Error + Send + Sync + 'static>>
         .branch(filter_command)
         .branch(case![State::AddNewVip {state}].endpoint(add_new_vip))
         .branch(case![State::AddNewModel {state}].endpoint(add_new_model))
+        .branch(case![State::ChangeModel {state}].endpoint(change_model))
         .branch(entry().endpoint(invalid_point));
 
     let callback_query_handler = Update::filter_callback_query()
         .enter_dialogue::<CallbackQuery, InMemStorage<State>, State>()
+        .branch(case![State::AddNewModel {state}].endpoint(callback_add_new_model))
         .branch(case![State::Vip].endpoint(callback_vip))
         .branch(case![State::RemoveVip].endpoint(remove_vip))
         .branch(case![State::Models].endpoint(callback_models))
-        .branch(case![State::ChangeModel].endpoint(callback_change_models));
+        .branch(case![State::ChangeModel {state}].endpoint(callback_change_models));
 
     entry()
         .branch(callback_query_handler)
