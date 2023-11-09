@@ -1,11 +1,14 @@
+use std::ops::Add;
+use std::str::FromStr;
 use std::thread;
 use teloxide::Bot;
 use teloxide::prelude::{Requester, ResponseResult};
 use teloxide::{prelude::*, utils::command::BotCommands};
 use teloxide::dispatching::dialogue::InMemStorage;
 use teloxide::dptree::case;
-use teloxide::types::{ButtonRequest, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, KeyboardMarkup, Message, WebAppInfo};
+use teloxide::types::{ButtonRequest, Currency, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, KeyboardMarkup, LabeledPrice, Message, OrderInfo, WebAppInfo};
 use crate::db;
+use crate::db::models;
 use crate::db::models::User;
 
 type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
@@ -43,8 +46,12 @@ pub async fn run() {
         .branch(filter_command)
         .branch(dptree::endpoint(invalid));
 
+    let filter_pre_checkout_query = Update::filter_pre_checkout_query()
+        .branch(dptree::endpoint(pre_checkout_query));
+
     let handler = dptree::entry()
-        .branch(filter_message);
+        .branch(filter_message)
+        .branch(filter_pre_checkout_query);
 
     Dispatcher::builder(bot, handler)
         .enable_ctrlc_handler()
@@ -77,6 +84,30 @@ async fn start(bot: Bot, msg: Message) -> HandlerResult {
     Ok(())
 }
 
+async fn pre_checkout_query(bot: Bot, query: PreCheckoutQuery) -> HandlerResult {
+    match i64::from_str(query.invoice_payload.as_str()) {
+        Ok(id) => {
+            let chat_id = ChatId(id);
+            bot.send_message(chat_id, "Начинаем запись пользователя...").await?;
+
+            let mut users = db::get_users().await;
+            users.push(User {
+                tg_id: isize::from_str(query.from.id.to_string().as_str()).unwrap(),
+                name: query.from.first_name,
+            } );
+            db::flush_users(users).await;
+
+            bot.answer_pre_checkout_query(query.id, true).await?;
+            bot.send_message(chat_id, "Успешно. Завершаем покупку!").await?;
+        },
+        Err(_) => {
+            bot.answer_pre_checkout_query(query.id, false).await?;
+        }
+    }
+    Ok(())
+}
+
+
 async fn vip(bot: Bot, msg: Message) -> HandlerResult {
     let users = db::get_users().await;
     let current_user = msg.from().expect("User from VIP command wasn't received");
@@ -86,11 +117,20 @@ async fn vip(bot: Bot, msg: Message) -> HandlerResult {
         .collect();
 
     match users.first() {
-        Some(user) => {
+        Some(_) => {
             bot.send_message(msg.chat.id, "Вы уже VIP, спасибо за поддержку нашего сервиса!").await?;
         },
         None => {
-            bot.send_message(msg.chat.id, "Вы еще не VIP. Тут будет реализованна оплата по карте").await?;
+            bot.send_message(msg.chat.id, "Хотите вип?").await?;
+            bot.send_invoice(
+                msg.chat.id,
+                "VIP-статус",
+                "Доступ большому числу эксклюзивного контента",
+                msg.chat.id.to_string(),
+                "381764678:TEST:70885",
+                "RUB", // currency code
+                vec![LabeledPrice::new("VIP", 29999)],
+            ).send().await?;
         }
     }
     Ok(())

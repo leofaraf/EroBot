@@ -18,10 +18,10 @@ use teloxide::types::{Document, InlineKeyboardButton, InlineKeyboardMarkup, Me, 
 use teloxide::utils::command::BotCommands;
 use tokio::fs::{create_dir_all, File};
 use uuid::Uuid;
+use crate::admin::media_handler::{add_document, add_video};
 use crate::admin::types::{AddNewModelState, ChangeModelState, ChangeModelType, HandlerResult,
                           MyDialogue, State};
-use crate::admin::types::ChangeModelType::AwaitPostMediaType;
-use crate::admin::types::State::{AddNewModel, ChangeModel};
+use crate::admin::types::State::{AddNewModel, AwaitPostAction, ChangeModel};
 use crate::db;
 use crate::db::models::{Media, MediaType, Model, ModelCategory, Post};
 
@@ -53,39 +53,6 @@ pub async fn callback_change_models(bot: Bot, callback: CallbackQuery,
     let data = data_option.as_str();
 
     match state.type_of_await {
-        ChangeModelType::AwaitPostStatus {name} => {
-            match bool::from_str(data) {
-                Ok(status) => {
-                    dialogue.update(ChangeModel { state: ChangeModelState {
-                        model: state.model,
-                        type_of_await: ChangeModelType::AwaitPostMediaType {name, status},
-                    }}).await?;
-                    let markup = InlineKeyboardMarkup::new([
-                        [
-                            InlineKeyboardButton::callback("Изображение", "0"),
-                            InlineKeyboardButton::callback("Видео", "1")
-                        ]
-                    ]);
-                    bot.send_message(msg.chat.id, "Отлично. Выберите тип поста:")
-                        .reply_markup(markup).await?;
-                },
-                Err(e) => {
-                    bot.send_message(msg.chat.id, "Возможно вы нажали на старую кнопку. \
-                    Нажмите на статус поста!").await?;
-                }
-            }
-        },
-        AwaitPostMediaType {name, status } => {
-            let media_type = match data {
-                "1" => MediaType::Video,
-                _ => MediaType::Image
-            };
-            dialogue.update(ChangeModel { state: ChangeModelState {
-                model: state.model,
-                type_of_await: ChangeModelType::AwaitPostMedia {name, status, media_type},
-            }}).await?;
-            bot.send_message(msg.chat.id, "Отлично. Скиньте документ с медиа!").await?;
-        }
         ChangeModelType::AwaitCategory => {
             let mut model = state.model;
             model.category = match data {
@@ -103,35 +70,6 @@ pub async fn callback_change_models(bot: Bot, callback: CallbackQuery,
             db::flush_models(models).await;
             bot.send_message(msg.chat.id, "Успешно, выходим в главное меню (/start)").await?;
             dialogue.exit().await?;
-        }
-        ChangeModelType::AwaitPostAction => {
-            match data {
-                "create_post" => {
-                    dialogue.update(ChangeModel { state: ChangeModelState {
-                        model: state.model,
-                        type_of_await: ChangeModelType::AwaitPostName,
-                    }}).await?;
-                    bot.send_message(msg.chat.id, "Напишите имя для поста:").await?;
-                }
-                other => {
-                    let mut model = state.model;
-                    let mut posts = model.posts.clone();
-                    posts = posts.into_iter()
-                        .filter(|current| current.id.to_string() != other).collect();
-
-                    let mut models = db::get_models().await;
-                    models = models.into_iter()
-                        .filter(|current| current.id != model.id).collect();
-
-                    model.posts = posts;
-                    models.push(model);
-                    db::flush_models(models).await;
-
-                    dialogue.exit().await?;
-                    bot.send_message(msg.chat.id, "Успешно! Вышли в главное меню \
-                    (/start)").await?;
-                }
-            }
         },
         _ => {
             match data {
@@ -157,10 +95,7 @@ pub async fn callback_change_models(bot: Bot, callback: CallbackQuery,
                     let text = format!("Показанно {} постов по модели. \
             Выберите пост из списка и нажмите на кнопку справа если хотите удалить! \
             Когда вы захотите выйти из диалога напишите /exit", &state.model.posts.len());
-                    dialogue.update(ChangeModel { state: ChangeModelState {
-                        model: state.model,
-                        type_of_await: ChangeModelType::AwaitPostAction,
-                    }}).await?;
+                    dialogue.update(AwaitPostAction {model: state.model}).await?;
                     bot.send_message(msg.chat.id, text).reply_markup(create_btn).await?;
                 },
                 "change_name" => {
@@ -238,79 +173,6 @@ pub async fn change_model(bot: Bot, msg: Message,
                 None => {
                     bot.send_message(msg.chat.id, "Не тот тип данных, должно быть фото!")
                         .await?;
-                }
-            }
-        },
-        ChangeModelType::AwaitPostName => {
-            match msg.text() {
-                Some(text) => {
-                    dialogue.update(ChangeModel { state: ChangeModelState {
-                        model: state.model,
-                        type_of_await: ChangeModelType::AwaitPostStatus { name: text.to_string() },
-                    }}).await?;
-                    let markup = InlineKeyboardMarkup::new([
-                        [InlineKeyboardButton::callback("VIP", "true"),
-                        InlineKeyboardButton::callback("Не VIP", "false")]
-                    ]);
-                    bot.send_message(msg.chat.id, "Выберите статус:")
-                        .reply_markup(markup).await?;
-                },
-                None => {
-                    bot.send_message(msg.chat.id, "Имя должно быть в виде текста!").await?;
-                }
-            }
-        },
-        ChangeModelType::AwaitPostMedia {name, status, media_type} => {
-            match media_type {
-                MediaType::Image => {
-                    match msg.document() {
-                        Some(document) => {
-                            let mut model = state.model;
-                            let post = Post {
-                                id: Uuid::new_v4(),
-                                name,
-                                media: add_document(document, &bot, media_type).await.expect("Can't change document"),
-                                is_vip: status,
-                            };
-                            model.posts.push(post);
-                            let mut models = db::get_models().await;
-                            models = models.into_iter()
-                                .filter(|current| current.id != model.id).collect();
-                            models.push(model);
-                            db::flush_models(models).await;
-                            dialogue.exit().await?;
-                            bot.send_message(msg.chat.id, "Успешно, выходим в главное меню (/start)")
-                                .await?;
-                        },
-                        None => {
-                            bot.send_message(msg.chat.id, "Не тот тип данных!").await?;
-                        }
-                    }
-                },
-                MediaType::Video => {
-                    match msg.video() {
-                        Some(video) => {
-                            let mut model = state.model;
-                            let post = Post {
-                                id: Uuid::new_v4(),
-                                name,
-                                media: add_video(video, &bot, media_type).await.expect("Can't change document"),
-                                is_vip: status,
-                            };
-                            model.posts.push(post);
-                            let mut models = db::get_models().await;
-                            models = models.into_iter()
-                                .filter(|current| current.id != model.id).collect();
-                            models.push(model);
-                            db::flush_models(models).await;
-                            dialogue.exit().await?;
-                            bot.send_message(msg.chat.id, "Успешно, выходим в главное меню (/start)")
-                                .await?;
-                        },
-                        None => {
-                            bot.send_message(msg.chat.id, "Не тот тип данных!").await?;
-                        }
-                    }
                 }
             }
         },
@@ -468,66 +330,6 @@ pub async fn add_new_model(bot: Bot, msg: Message, dialogue: MyDialogue, state: 
     }
 
     Ok(())
-}
-
-async fn add_document(document: &Document, bot: &Bot, media_type: MediaType) -> Result<Media, ()> {
-    let name = document.file_name.clone().unwrap();
-
-    let extension = match Path::new(name.as_str()).extension() {
-        None => None,
-        Some(path) => path.to_str()
-    };
-
-    let folder = "media/";
-    let path: &Path = Path::new(folder);
-    if !path.exists() {
-        create_dir_all(path).await.expect("Can't create dirs");
-    }
-
-    let media = Media {
-        media_type,
-        path: folder.to_string().add(match extension {
-            Some(text) => Uuid::new_v4().to_string().add(".").add(text),
-            None => Uuid::new_v4().to_string()
-        }.as_str())
-    };
-
-    let file =  bot.get_file(&document.file.id).await.unwrap();
-    let mut dst = File::create(&media.path).await.unwrap();
-
-    // Download the voice message and write it to the file
-    bot.download_file(&file.path, &mut dst).await.unwrap();
-    Ok((media))
-}
-
-async fn add_video(document: &Video, bot: &Bot, media_type: MediaType) -> Result<Media, ()> {
-    let name = document.file_name.clone().unwrap();
-
-    let extension = match Path::new(name.as_str()).extension() {
-        None => None,
-        Some(path) => path.to_str()
-    };
-
-    let folder = "media/";
-    let path: &Path = Path::new(folder);
-    if !path.exists() {
-        create_dir_all(path).await.expect("Can't create dirs");
-    }
-
-    let media = Media {
-        media_type,
-        path: folder.to_string().add(match extension {
-            Some(text) => Uuid::new_v4().to_string().add(".").add(text),
-            None => Uuid::new_v4().to_string()
-        }.as_str())
-    };
-
-    let file =  bot.get_file(&document.file.id).await.unwrap();
-    let mut dst = File::create(&media.path).await.unwrap();
-
-    // Download the voice message and write it to the file
-    bot.download_file(&file.path, &mut dst).await.unwrap();
-    Ok((media))
 }
 
 async fn delete_document(media: Media) {
