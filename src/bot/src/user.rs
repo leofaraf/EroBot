@@ -1,6 +1,7 @@
 use std::ops::Add;
 use std::str::FromStr;
 use std::thread;
+use dotenv_codegen::dotenv;
 use teloxide::Bot;
 use teloxide::prelude::{Requester, ResponseResult};
 use teloxide::{prelude::*, utils::command::BotCommands};
@@ -34,7 +35,8 @@ pub enum State {
 pub async fn run() {
     // pretty_env_logger::init();
 
-    let token = "6463143170:AAGevkCPBTaAEEnKmtLCYzvxHpdjhzsHJe4";
+    let token = dotenv!("USER_BOT_TOKEN");
+
     let bot = Bot::new(token);
 
     let filter_command = teloxide::filter_command::<Command, _>()
@@ -68,12 +70,12 @@ async fn help(bot: Bot, msg: Message) -> HandlerResult {
 async fn start(bot: Bot, msg: Message) -> HandlerResult {
     let text = format!("
             1000+ Бесплатных СЛИВОВ\n\
-            / ТУТ БУДЕТ ССЫЛКА /\n\
+            {}\n\
             ТАКЖЕ СМОТРИ СЛИВЫ ПРЯМО В БОТЕ\n\
-            Кликай на кнопку 👇👇👇");
+            Кликай на кнопку 👇👇👇", dotenv!("GROUP_LINK"));
 
     let webapp = WebAppInfo {
-        url: "https://id.tinkoff.ru/auth/step?cid=PMZrkDhN16O0".parse().unwrap()
+        url: dotenv!("WEBAPP_URL").parse().unwrap()
     };
 
     let list = InlineKeyboardMarkup::new(vec![vec![
@@ -92,7 +94,7 @@ async fn pre_checkout_query(bot: Bot, query: PreCheckoutQuery) -> HandlerResult 
 
             let mut users = db::get_users().await;
             users.push(User {
-                tg_id: isize::from_str(query.from.id.to_string().as_str()).unwrap(),
+                tg_id: query.from.id.to_string(),
                 name: query.from.first_name,
             } );
             db::flush_users(users).await;
@@ -127,8 +129,8 @@ async fn vip(bot: Bot, msg: Message) -> HandlerResult {
                 "VIP-статус",
                 "Доступ большому числу эксклюзивного контента",
                 msg.chat.id.to_string(),
-                "381764678:TEST:70885",
-                "RUB", // currency code
+                dotenv!("PAYMENT_TOKEN"),
+                "RUB",
                 vec![LabeledPrice::new("VIP", 29999)],
             ).send().await?;
         }

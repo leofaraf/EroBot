@@ -8,6 +8,7 @@ use std::fmt::format;
 use std::num::ParseIntError;
 use std::process::exit;
 use std::str::FromStr;
+use dotenv_codegen::dotenv;
 use teloxide::{Bot, dptree};
 use teloxide::dispatching::{HandlerExt, UpdateFilterExt, UpdateHandler};
 use teloxide::dispatching::dialogue::InMemStorage;
@@ -28,7 +29,7 @@ use crate::db;
 pub async fn run() {
     pretty_env_logger::init();
     let bot = Bot::new(
-        "6446623321:AAEB5CFL6mcRvLRCJ5ib52fjOkToOtv28WU");
+        dotenv!("ADMIN_BOT_TOKEN"));
 
     Dispatcher::builder(bot, schema())
         .dependencies(dptree::deps![InMemStorage::<State>::new()])

@@ -1,22 +1,14 @@
 use teloxide::Bot;
 use teloxide::prelude::CallbackQuery;
-use crate::admin::types::{ChangeModelState, ChangeModelType, HandlerResult, MyDialogue};
+use crate::admin::types::{HandlerResult, MyDialogue};
 use std::str::FromStr;
-use teloxide::{dptree};
-use teloxide::dispatching::{HandlerExt, UpdateFilterExt, UpdateHandler};
-use teloxide::dispatching::dialogue::InMemStorage;
-use teloxide::dptree::{case, entry};
 use teloxide::payloads::SendMessageSetters;
 use teloxide::payloads::{CopyMessageSetters, SendDiceSetters};
-use teloxide::prelude::{Dialogue, Dispatcher, Requester};
-use teloxide::types::{InlineKeyboardButton, InlineKeyboardMarkup, Message, Update};
-use teloxide::utils::command::BotCommands;
+use teloxide::prelude::{Requester};
+use teloxide::types::{InlineKeyboardButton, InlineKeyboardMarkup, Message};
 use uuid::Uuid;
 use crate::admin::media_handler::{add_document, add_video};
-use crate::admin::models::{add_new_model, callback_add_new_model, callback_change_models, callback_models, change_model, models};
-use crate::admin::types::{AddNewVipState, Command, State};
-use crate::admin::types::State::{AwaitPostMedia, AwaitPostMediaType, AwaitPostName, AwaitPostStatus, ChangeModel};
-use crate::admin::vip::{add_new_vip, callback_vip, remove_vip, vip};
+use crate::admin::types::State::{AwaitPostMedia, AwaitPostMediaType, AwaitPostName, AwaitPostStatus};
 use crate::db;
 use crate::db::models::{MediaType, Model, Post};
 

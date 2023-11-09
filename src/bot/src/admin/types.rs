@@ -25,7 +25,7 @@ pub enum Command {
 #[derive(Clone)]
 pub enum AddNewVipState {
     AwaitId,
-    AwaitName {id: isize}
+    AwaitName {id: String}
 }
 
 #[derive(Clone)]

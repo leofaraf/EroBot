@@ -42,7 +42,7 @@ pub async fn add_new_vip(bot: Bot, msg: Message, dialogue: MyDialogue, state: Ad
                             return Ok(())
                         }
                     };
-                    dialogue.update(State::AddNewVip {state: AddNewVipState::AwaitName { id }}).await?;
+                    dialogue.update(State::AddNewVip {state: AddNewVipState::AwaitName { id: id.to_string() }}).await?;
                     bot.send_message(msg.chat.id, "Напишите, ассоциацию для этого пользователя. \
             Это будет храниться в базе данных и если вы будите удалять пользователя - \
             вы сможете его найти по этого имени").await?;
@@ -82,10 +82,10 @@ pub async fn remove_vip(bot: Bot, callback: CallbackQuery, dialogue: MyDialogue)
     let data = data_option.as_str();
 
     match isize::from_str(data) {
-        Ok(i) => {
+        Ok(id) => {
             let mut users = db::get_users().await;
             users = users.into_iter()
-                .filter(|user| user.tg_id != i)
+                .filter(|user| user.tg_id != id.to_string())
                 .collect();
             db::flush_users(users).await;
             bot.send_message(msg.chat.id, "Успешно!").await?;

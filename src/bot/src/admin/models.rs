@@ -1,29 +1,15 @@
-use std::error::Error;
-use std::ffi::OsStr;
-use std::fmt::format;
-use std::num::ParseIntError;
-use std::ops::Add;
-use std::path::Path;
-use std::process::exit;
-use std::str::{FromStr, Split};
-use teloxide::{Bot, dptree};
-use teloxide::dispatching::{HandlerExt, UpdateFilterExt, UpdateHandler};
-use teloxide::dispatching::dialogue::InMemStorage;
-use teloxide::dptree::{case, entry};
-use teloxide::net::Download;
+use teloxide::{Bot};
 use teloxide::payloads::SendMessageSetters;
 use teloxide::payloads::{CopyMessageSetters, SendDiceSetters};
-use teloxide::prelude::{CallbackQuery, Dialogue, Dispatcher, Requester};
-use teloxide::types::{Document, InlineKeyboardButton, InlineKeyboardMarkup, Me, Message, Update, Video};
-use teloxide::utils::command::BotCommands;
-use tokio::fs::{create_dir_all, File};
+use teloxide::prelude::{CallbackQuery, Requester};
+use teloxide::types::{InlineKeyboardButton, InlineKeyboardMarkup, Message};
 use uuid::Uuid;
-use crate::admin::media_handler::{add_document, add_video};
+use crate::admin::media_handler::{add_document};
 use crate::admin::types::{AddNewModelState, ChangeModelState, ChangeModelType, HandlerResult,
                           MyDialogue, State};
 use crate::admin::types::State::{AddNewModel, AwaitPostAction, ChangeModel};
 use crate::db;
-use crate::db::models::{Media, MediaType, Model, ModelCategory, Post};
+use crate::db::models::{Media, MediaType, Model, ModelCategory};
 
 pub async fn models(bot: Bot, msg: Message, dialogue: MyDialogue) -> HandlerResult {
     let models = db::get_models().await;
