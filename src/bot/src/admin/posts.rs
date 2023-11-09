@@ -12,10 +12,6 @@ use crate::admin::types::State::{AwaitPostMedia, AwaitPostMediaType, AwaitPostNa
 use crate::db;
 use crate::db::models::{MediaType, Model, Post};
 
-pub fn posts_message_schema() {
-
-}
-
 pub async fn await_post_action(bot: Bot, callback: CallbackQuery,
                                dialogue: MyDialogue, model: Model) -> HandlerResult {
     let msg = callback.message.expect("Message from callback wasn't received");
