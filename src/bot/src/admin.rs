@@ -8,6 +8,7 @@ use std::fmt::format;
 use std::num::ParseIntError;
 use std::process::exit;
 use std::str::FromStr;
+use dotenv::dotenv;
 use dotenv_codegen::dotenv;
 use teloxide::{Bot, dptree};
 use teloxide::dispatching::{HandlerExt, UpdateFilterExt, UpdateHandler};
@@ -28,6 +29,8 @@ use crate::db;
 #[tokio::main]
 pub async fn run() {
     pretty_env_logger::init();
+    dotenv().ok();
+
     let bot = Bot::new(
         dotenv!("ADMIN_BOT_TOKEN"));
 

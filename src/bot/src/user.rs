@@ -1,6 +1,8 @@
 use std::ops::Add;
 use std::str::FromStr;
 use std::thread;
+use actix_web::dev::Url;
+use dotenv::dotenv;
 use dotenv_codegen::dotenv;
 use teloxide::Bot;
 use teloxide::prelude::{Requester, ResponseResult};
@@ -33,7 +35,7 @@ pub enum State {
 
 #[tokio::main]
 pub async fn run() {
-    // pretty_env_logger::init();
+    dotenv().ok();
 
     let token = dotenv!("USER_BOT_TOKEN");
 
@@ -68,6 +70,7 @@ async fn help(bot: Bot, msg: Message) -> HandlerResult {
 }
 
 async fn start(bot: Bot, msg: Message) -> HandlerResult {
+    let user = msg.from().unwrap();
     let text = format!("
             1000+ Бесплатных СЛИВОВ\n\
             {}\n\
@@ -75,7 +78,7 @@ async fn start(bot: Bot, msg: Message) -> HandlerResult {
             Кликай на кнопку 👇👇👇", dotenv!("GROUP_LINK"));
 
     let webapp = WebAppInfo {
-        url: dotenv!("WEBAPP_URL").parse().unwrap()
+        url: format!("{}?id={}", dotenv!("WEBAPP_URL"), user.id.to_string()).parse().unwrap()
     };
 
     let list = InlineKeyboardMarkup::new(vec![vec![
