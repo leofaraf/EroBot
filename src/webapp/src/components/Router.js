@@ -143,7 +143,7 @@ function Router() {
                                 </div>
                             </div>
                         ) : (
-                            <div className={["fixed z-[10000] w-full h-full flex justify-between flex-col p-4 top-0 left-0", bg].join(" ")}>
+                            <div className={["absolute z-[10000] w-full h-full flex justify-between flex-col p-4 top-0 left-0", bg].join(" ")}>
                                 <div className={"flex justify-between items-center pb-2 text-lg"}>
                                     <p>{post.name}</p>
                                     <button
