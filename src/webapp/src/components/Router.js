@@ -126,7 +126,7 @@ function Router() {
                 {post && (
                     <>
                         {!(post.is_vip && !user) ? (
-                            <div className={[bg, "fixed top-0 left-0 z-50 bg-zinc-800 w-full h-full flex flex-col p-4"].join(" ")}>
+                            <div className={[bg, "fixed top-0 left-0 z-50 w-full h-full flex flex-col p-4"].join(" ")}>
                                 <div className={"flex justify-between text-lg"}>
                                     <p>{post.name}</p>
                                     <button
