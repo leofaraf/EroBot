@@ -26,7 +26,7 @@ pub struct Model {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum ModelCategory {
     Influential,
-    Tiktok,
+    Cosplay,
     Star,
     Twitch,
     OnlyFans,

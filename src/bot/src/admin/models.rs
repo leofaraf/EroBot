@@ -44,7 +44,7 @@ pub async fn callback_change_models(bot: Bot, callback: CallbackQuery,
             model.category = match data {
                 "1" => ModelCategory::Boosty,
                 "2" => ModelCategory::Star,
-                "3" => ModelCategory::Tiktok,
+                "3" => ModelCategory::Cosplay,
                 "4" => ModelCategory::OnlyFans,
                 "5" => ModelCategory::Twitch,
                 _ => ModelCategory::Influential
@@ -249,7 +249,7 @@ pub async fn callback_add_new_model(bot: Bot, callback: CallbackQuery, dialogue:
             let category = match data {
                 "1" => ModelCategory::Boosty,
                 "2" => ModelCategory::Star,
-                "3" => ModelCategory::Tiktok,
+                "3" => ModelCategory::Cosplay,
                 "4" => ModelCategory::OnlyFans,
                 "5" => ModelCategory::Twitch,
                 _ => ModelCategory::Influential

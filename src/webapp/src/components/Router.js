@@ -205,8 +205,8 @@ function Router() {
                 <div className="grid grid-cols-3 gap-3 w-full pt-1">
                     <button className="category-button" onClick={() => setCategory("Influential")}>
                         <img src={famale} width={16} />Блогершы</button>
-                    <button className="category-button" onClick={() => setCategory("Tiktok")}>
-                        <img src={tiktok} width={16} />Тикток</button>
+                    <button className="category-button" onClick={() => setCategory("Cosplay")}>
+                        <img src={tiktok} width={16} />Косплеи</button>
                     <button className="category-button" onClick={() => setCategory("Star")}>
                         <img src={instagram} width={16} />Звезды</button>
                     <button className="category-button" onClick={() => setCategory("Twitch")}>
