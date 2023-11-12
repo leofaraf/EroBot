@@ -18,7 +18,8 @@ function Router() {
     const [is_only_vip, setOnlyVip] = useState(false);
     const [topbarModels, setTopbapModels] = useState(null);
     const [post, setPost] = useState(null);
-    const [bg, setBg] = useState("bg-zinc-800");
+    const [bg, setBg] = useState("bg-white"); //bg-zinc-800
+    const [secondColor, setSecondColor] = useState("text-black") //text-white
 
     useEffect(() => {
         const script = document.createElement("script")
@@ -33,6 +34,9 @@ function Router() {
         console.log(window)
         if (window?.Telegram?.WebApp?.themeParams?.bg_color) {
             setBg("bg-[" + window.Telegram.WebApp.themeParams.bg_color + "]")
+        }
+        if (window?.Telegram?.WebApp?.colorScheme && window.Telegram.WebApp.colorScheme !== "light") {
+            setSecondColor("text-white")
         }
     }, [window.Telegram])
 
@@ -116,22 +120,13 @@ function Router() {
         return result;
     }
 
-    return <div className={[bg, "h-screen text-white p-4 gap-2 text-sm"].join(' ')}>
-        {window.Telegram && (
-            <p>telegram . {window.Telegram.WebApp && (
-                <p>WebApp {window.Telegram.WebApp.themeParams && (
-                    <p>theme {window.Telegram.WebApp.themeParams.bg_color && (
-                        <p>{window.Telegram.WebApp.themeParams.bg_color}</p>
-                    )}</p>
-                )}</p>
-            )}</p>
-        )}
+    return <div className={[bg, secondColor, "h-screen p-4 gap-2 text-sm"].join(' ')}>
         {model ? (
             <div className={"flex flex-col gap-3"}>
                 {post && (
                     <>
                         {!(post.is_vip && !user) ? (
-                            <div className={"fixed top-0 left-0 z-50 bg-zinc-800 w-full h-full flex flex-col p-4"}>
+                            <div className={[bg, "fixed top-0 left-0 z-50 bg-zinc-800 w-full h-full flex flex-col p-4"].join(" ")}>
                                 <div className={"flex justify-between text-lg"}>
                                     <p>{post.name}</p>
                                     <button
@@ -148,7 +143,7 @@ function Router() {
                                 </div>
                             </div>
                         ) : (
-                            <div className={"fixed top-0 left-0 z-50 bg-zinc-800 w-full h-full flex justify-between flex-col p-4"}>
+                            <div className={[bg, "fixed top-0 left-0 z-50 w-full h-full flex justify-between flex-col p-4"].join(" ")}>
                                 <div className={"flex justify-between items-center pb-2 text-lg"}>
                                     <p>{post.name}</p>
                                     <button
@@ -185,7 +180,7 @@ function Router() {
 
                         return (
                             <>
-                                <div className={"w-full relative rounded-xl h-44 flex justify-center"}
+                                <div className={"w-full text-white relative rounded-xl h-44 flex justify-center"}
                                      onClick={() => setPost(post)}>
                                     {post.is_vip && (
                                         <>
@@ -244,7 +239,7 @@ function Router() {
                 <div className={"grid grid-cols-3 gap-3 pt-3"}>
                     {models ? filter_models(models).map(model => {
                         return (
-                            <div className={"w-full relative rounded-xl h-44 flex justify-center"}
+                            <div className={"w-full text-white relative rounded-xl h-44 flex justify-center"}
                                  onClick={() => open_model(model)}>
                                 <div className={"rounded-tr-xl rounded-bl-xl absolute top-0 right-0 flex px-1 justify-center bg-black"}>
                                     <p>{model?.posts?.length} фото</p>
