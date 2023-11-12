@@ -18,6 +18,21 @@ function Router() {
     const [is_only_vip, setOnlyVip] = useState(false);
     const [topbarModels, setTopbapModels] = useState(null);
     const [post, setPost] = useState(null);
+    const [bg, setBg] = useState("bg-zinc-800");
+
+    useEffect(() => {
+        const script = document.createElement("script")
+
+        script.src =
+            "https://telegram.org/js/telegram-web-app.js"
+
+        document.body.appendChild(script)
+
+        console.log(window)
+        if (window?.Telegram?.Webapp?.themeParams) {
+            setBg(window?.Telegram?.Webapp?.themeParams.bg_color)
+        }
+    }, [])
 
     useEffect(() => {
         fetch("/api/models")
@@ -99,8 +114,7 @@ function Router() {
         return result;
     }
 
-
-    return <div className={"bg-zinc-800 h-screen text-white p-4 gap-2 text-sm"}>
+    return <div className={[bg, "h-screen text-white p-4 gap-2 text-sm"].join(' ')}>
         {model ? (
             <div className={"flex flex-col gap-3"}>
                 {post && (
