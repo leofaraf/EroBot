@@ -29,8 +29,8 @@ function Router() {
         document.body.appendChild(script)
 
         console.log(window)
-        if (window?.Telegram?.Webapp?.themeParams) {
-            setBg(window?.Telegram?.Webapp?.themeParams.bg_color)
+        if (window?.Telegram?.WebApp?.themeParams) {
+            setBg(window?.Telegram?.WebApp?.themeParams.bg_color)
         }
     }, [])
 
