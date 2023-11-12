@@ -27,12 +27,14 @@ function Router() {
             "https://telegram.org/js/telegram-web-app.js"
 
         document.body.appendChild(script)
+    }, [])
 
+    useEffect(() => {
         console.log(window)
         if (window?.Telegram?.WebApp?.themeParams?.bg_color) {
-            setBg("bg-[" + window?.Telegram?.WebApp?.themeParams.bg_color + "]")
+            setBg("bg-[" + window.Telegram.WebApp.themeParams.bg_color + "]")
         }
-    }, [])
+    }, [window.Telegram])
 
     useEffect(() => {
         fetch("/api/models")
