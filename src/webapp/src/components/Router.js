@@ -29,8 +29,8 @@ function Router() {
         document.body.appendChild(script)
 
         console.log(window)
-        if (window?.Telegram?.WebApp?.themeParams) {
-            setBg(window?.Telegram?.WebApp?.themeParams.bg_color)
+        if (window?.Telegram?.WebApp?.themeParams?.bg_color) {
+            setBg("bg-[" + window?.Telegram?.WebApp?.themeParams.bg_color + "]")
         }
     }, [])
 
@@ -115,6 +115,15 @@ function Router() {
     }
 
     return <div className={[bg, "h-screen text-white p-4 gap-2 text-sm"].join(' ')}>
+        {window.Telegram && (
+            <p>telegram . {window.Telegram.WebApp && (
+                <p>WebApp {window.Telegram.WebApp.themeParams && (
+                    <p>theme {window.Telegram.WebApp.themeParams.bg_color && (
+                        <p>color</p>
+                    )}</p>
+                )}</p>
+            )}</p>
+        )}
         {model ? (
             <div className={"flex flex-col gap-3"}>
                 {post && (
