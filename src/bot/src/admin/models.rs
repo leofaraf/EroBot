@@ -42,11 +42,11 @@ pub async fn callback_change_models(bot: Bot, callback: CallbackQuery,
         ChangeModelType::AwaitCategory => {
             let mut model = state.model;
             model.category = match data {
-                "1" => ModelCategory::Boosty,
+                "1" => ModelCategory::Cosplay,
                 "2" => ModelCategory::Star,
-                "3" => ModelCategory::Cosplay,
+                "3" => ModelCategory::Twitch,
                 "4" => ModelCategory::OnlyFans,
-                "5" => ModelCategory::Twitch,
+                "5" => ModelCategory::Boosty,
                 _ => ModelCategory::Influential
             };
             let mut models = db::get_models().await;
@@ -175,7 +175,7 @@ fn make_category_keyboard() -> InlineKeyboardMarkup {
     InlineKeyboardMarkup::new([
         [
             InlineKeyboardButton::callback("Блогершы", "0"),
-            InlineKeyboardButton::callback("Тикток", "1"),
+            InlineKeyboardButton::callback("Коспели", "1"),
             InlineKeyboardButton::callback("Звезды", "2"),
         ],
         [
@@ -247,11 +247,11 @@ pub async fn callback_add_new_model(bot: Bot, callback: CallbackQuery, dialogue:
     match state {
         AddNewModelState::ReceiveModelCategory {name} => {
             let category = match data {
-                "1" => ModelCategory::Boosty,
+                "1" => ModelCategory::Cosplay,
                 "2" => ModelCategory::Star,
-                "3" => ModelCategory::Cosplay,
+                "3" => ModelCategory::Twitch,
                 "4" => ModelCategory::OnlyFans,
-                "5" => ModelCategory::Twitch,
+                "5" => ModelCategory::Boosty,
                 _ => ModelCategory::Influential
             };
             state = AddNewModelState::ReceiveModelPhoto {name, category};
