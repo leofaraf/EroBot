@@ -119,7 +119,7 @@ function Router() {
             <p>telegram . {window.Telegram.WebApp && (
                 <p>WebApp {window.Telegram.WebApp.themeParams && (
                     <p>theme {window.Telegram.WebApp.themeParams.bg_color && (
-                        <p>color</p>
+                        <p>{window.Telegram.WebApp.themeParams.bg_color}</p>
                     )}</p>
                 )}</p>
             )}</p>
