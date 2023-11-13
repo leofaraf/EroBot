@@ -39,7 +39,7 @@ function Router() {
         if (window?.Telegram?.WebApp?.colorScheme && window.Telegram.WebApp.colorScheme !== "light") {
             setSecondColor("text-white")
         }
-        console.log("end-of-receive")å
+        console.log("end-of-receive")
         console.log(window)
     }, [window.Telegram])
 
