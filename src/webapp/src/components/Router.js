@@ -59,7 +59,7 @@ function Router() {
                             setUser(json)
                         })
                     } else {
-                        setUser("xawdw dadaw") // need for run background hook
+                        setUser(null) // need for run background hook
                     }
                 })
         }
