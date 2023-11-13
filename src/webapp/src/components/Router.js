@@ -36,7 +36,7 @@ function Router() {
             setBg("bg-[" + window.Telegram.WebApp.themeParams.bg_color + "]")
         }
         if (window?.Telegram?.WebApp?.colorScheme && window.Telegram.WebApp.colorScheme !== "light") {
-            setSecondColor("text-white")
+            setSecondColor("text-red")
         }
     }, [window.Telegram])
 
@@ -122,6 +122,9 @@ function Router() {
     }
 
     return <div className={[bg, secondColor, "h-screen p-4 gap-2 text-sm"].join(' ')}>
+        {window?.Telegram?.WebApp?.themeParams?.bg_color && (
+            <p>{window.Telegram.WebApp.themeParams.bg_color}</p>
+        )}
         {model ? (
             <div className={"flex flex-col gap-3"}>
                 {post ? (
