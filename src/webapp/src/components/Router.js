@@ -33,16 +33,13 @@ function Router() {
     useEffect(() => {
         console.log("re-render")
 
-        let timer1 = setTimeout(() => {
-            if (window?.Telegram?.WebApp?.themeParams?.bg_color) {
-                setBg("bg-[" + window.Telegram.WebApp.themeParams.bg_color + "]")
-            }
-            if (window?.Telegram?.WebApp?.colorScheme && window.Telegram.WebApp.colorScheme !== "light") {
-                setSecondColor("text-white")
-            }
-        }, 1000)
-        clearTimeout(timer1)
-        console.log("end-of-receive")
+        if (window?.Telegram?.WebApp?.themeParams?.bg_color) {
+            setBg("bg-[" + window.Telegram.WebApp.themeParams.bg_color + "]")
+        }
+        if (window?.Telegram?.WebApp?.colorScheme && window.Telegram.WebApp.colorScheme !== "light") {
+            setSecondColor("text-white")
+        }
+        console.log("end-of-receive")å
         console.log(window)
     }, [window.Telegram])
 
