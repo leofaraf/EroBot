@@ -122,9 +122,7 @@ function Router() {
     }
 
     return <div className={[bg, secondColor, "h-screen p-4 gap-2 text-sm"].join(' ')}>
-        {window?.Telegram?.WebApp?.themeParams?.bg_color && (
-            <p>{window.Telegram.WebApp.themeParams.bg_color}</p>
-        )}
+        <p>{bg}</p>
         {model ? (
             <div className={"flex flex-col gap-3"}>
                 {post ? (
