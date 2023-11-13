@@ -123,10 +123,10 @@ function Router() {
     return <div className={[bg, secondColor, "h-screen p-4 gap-2 text-sm"].join(' ')}>
         {model ? (
             <div className={"flex flex-col gap-3"}>
-                {post && (
+                {post ? (
                     <>
                         {!(post.is_vip && !user) ? (
-                            <div className={[bg, "fixed top-0 left-0 z-50 w-full h-full flex flex-col p-4"].join(" ")}>
+                            <div className={[bg, "w-full h-screen flex flex-col p-4"].join(" ")}>
                                 <div className={"flex justify-between text-lg"}>
                                     <p>{post.name}</p>
                                     <button
@@ -143,7 +143,7 @@ function Router() {
                                 </div>
                             </div>
                         ) : (
-                            <div className={["absolute z-[10000] w-full h-full flex justify-between flex-col p-4 top-0 left-0", bg].join(" ")}>
+                            <div className={[bg, "w-full h-screen flex flex-col p-4"].join(" ")}>
                                 <div className={"flex justify-between items-center pb-2 text-lg"}>
                                     <p>{post.name}</p>
                                     <button
@@ -156,49 +156,52 @@ function Router() {
                             </div>
                         )}
                     </>
-                )}
-                <div className={"flex justify-between"}>
-                    <p className={"text-xl"}>{model.name}</p>
-                    <button
-                    onClick={() => close_model()}><u>Назад</u></button>
-                </div>
-                <div className={
-                    "flex justify-between items-center bg-gradient-to-r from-fuchsia-700 to-cyan-300 p-3 rounded-lg"
-                }>
-                    <p>Отображать только <br/>интим фото/видео</p>
-                    <div className="checkbox-wrapper-6">
-                        <input value={is_only_vip} onChange={event =>
-                        setOnlyVip(event.target.checked)} className="tgl tgl-light" id="cb1-6" type="checkbox"/>
-                        <label className="tgl-btn" htmlFor="cb1-6"/>
-                    </div>
-                </div>
-                <div className={"grid grid-cols-3 gap-3"}>
-                    {model.posts && model.posts.map(post => {
-                        if (is_only_vip && !post.is_vip) {
-                            return null;
-                        }
+                ) : (
+                    <>
+                        <div className={"flex justify-between"}>
+                            <p className={"text-xl"}>{model.name}</p>
+                            <button
+                                onClick={() => close_model()}><u>Назад</u></button>
+                        </div>
+                        <div className={
+                            "flex justify-between items-center bg-gradient-to-r from-fuchsia-700 to-cyan-300 p-3 rounded-lg"
+                        }>
+                            <p>Отображать только <br/>интим фото/видео</p>
+                            <div className="checkbox-wrapper-6">
+                                <input value={is_only_vip} onChange={event =>
+                                    setOnlyVip(event.target.checked)} className="tgl tgl-light" id="cb1-6" type="checkbox"/>
+                                <label className="tgl-btn" htmlFor="cb1-6"/>
+                            </div>
+                        </div>
+                        <div className={"grid grid-cols-3 gap-3"}>
+                            {model.posts && model.posts.map(post => {
+                                if (is_only_vip && !post.is_vip) {
+                                    return null;
+                                }
 
-                        return (
-                            <>
-                                <div className={"w-full text-white relative rounded-xl h-44 flex justify-center"}
-                                     onClick={() => setPost(post)}>
-                                    {post.is_vip && (
-                                        <>
-                                            <div className={"p-2 z-10 absolute top-0 left-0 flex justify-center"}>
-                                                <img src={strawberry}/>
+                                return (
+                                    <>
+                                        <div className={"w-full text-white relative rounded-xl h-44 flex justify-center"}
+                                             onClick={() => setPost(post)}>
+                                            {post.is_vip && (
+                                                <>
+                                                    <div className={"p-2 z-10 absolute top-0 left-0 flex justify-center"}>
+                                                        <img src={strawberry}/>
+                                                    </div>
+                                                </>
+                                            )}
+                                            <img className={post.is_vip ? "rounded-xl blur-sm object-cover" :
+                                                "rounded-xl object-cover"} src={post.media.media_type !== "Video" ? post.media.path : video_placeholder} />
+                                            <div className={"rounded-b-xl bg-opacity-50 h-10 absolute bottom-0 w-full flex items-center justify-center bg-black"}>
+                                                <p>{post.name}</p>
                                             </div>
-                                        </>
-                                    )}
-                                    <img className={post.is_vip ? "rounded-xl blur-sm object-cover" :
-                                    "rounded-xl object-cover"} src={post.media.media_type !== "Video" ? post.media.path : video_placeholder} />
-                                    <div className={"rounded-b-xl bg-opacity-50 h-10 absolute bottom-0 w-full flex items-center justify-center bg-black"}>
-                                        <p>{post.name}</p>
-                                    </div>
-                                </div>
-                            </>
-                        )
-                    })}
-                </div>
+                                        </div>
+                                    </>
+                                )
+                            })}
+                        </div>
+                    </>
+                )}
             </div>
         ) : (
             <>
