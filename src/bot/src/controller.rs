@@ -11,7 +11,7 @@ async fn user(name: web::Path<String>) -> HttpResponse {
             serialize user"));
         }
     }
-    HttpResponse::NotFound().finish()
+    HttpResponse::Accepted().finish()
 }
 
 #[get("api/models")]

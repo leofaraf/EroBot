@@ -52,6 +52,7 @@ function Router() {
         const searchParams = new URLSearchParams(window.location.search);
         if (searchParams.has("id")) {
             fetch("api/user/" + searchParams.get("id"))
+                .catch(e => console.log("there isn't " + e))
                 .then(r => {
                     if (r.status === 200) {
                         r.json().then(json => {
