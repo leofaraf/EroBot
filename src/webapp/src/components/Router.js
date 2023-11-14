@@ -52,6 +52,7 @@ function Router() {
             });
         const searchParams = new URLSearchParams(window.location.search);
         if (searchParams.has("id")) {
+            console.log("fetch vip")
             fetch("api/user/" + searchParams.get("id"))
                 .catch(e => console.log("there isn't " + e))
                 .then(r => {
@@ -60,6 +61,7 @@ function Router() {
                             setUser(json)
                         })
                     } else {
+                        console.log("not vip")
                         setUser("test for bg") // need for run background hook
                     }
                 })
@@ -127,7 +129,7 @@ function Router() {
             <div className={"flex flex-col gap-3"}>
                 {post ? (
                     <>
-                        {!(post.is_vip && !user === "test for bg") ? (
+                        {!(post.is_vip && user === "test for bg") ? (
                             <div className={[bg, "w-full h-screen flex flex-col p-4"].join(" ")}>
                                 <div className={"flex justify-between text-lg"}>
                                     <p>{post.name}</p>
