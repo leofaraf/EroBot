@@ -36,7 +36,7 @@ function Router() {
             setBg("bg-[" + window.Telegram.WebApp.themeParams.bg_color + "]")
         }
         if (window?.Telegram?.WebApp?.colorScheme && window.Telegram.WebApp.colorScheme !== "light") {
-            setSecondColor("text-red")
+            setSecondColor("text-white")
         }
     }, [window.Telegram])
 
@@ -122,7 +122,7 @@ function Router() {
     }
 
     return <div className={`${bg} ${secondColor} h-screen p-4 gap-2 text-sm`}>
-        <p>{bg}</p>
+        <p>{bg}, {secondColor}</p>
         {model ? (
             <div className={"flex flex-col gap-3"}>
                 {post ? (
