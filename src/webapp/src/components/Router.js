@@ -36,9 +36,9 @@ function Router() {
             setBg("bg-[#1a313f]")
             setSecondColor("text-white")
         }
-        if (window?.Telegram?.WebApp?.themeParams?.bg_color) {
-            setBg("bg-[" + window.Telegram.WebApp.themeParams.bg_color + "]")
-        }
+        // if (window?.Telegram?.WebApp?.themeParams?.bg_color) {
+        //     setBg("bg-[" + window.Telegram.WebApp.themeParams.bg_color + "]")
+        // }
     }, [window.Telegram])
 
     useEffect(() => {
