@@ -33,7 +33,7 @@ function Router() {
     useEffect(() => {
         console.log(window)
         if (window?.Telegram?.WebApp?.colorScheme && window.Telegram.WebApp.colorScheme !== "light") {
-            setBg("bg-[#475A65]")
+            setBg("bg-[#151b1e]")
             setSecondColor("text-white")
         }
         // if (window?.Telegram?.WebApp?.themeParams?.bg_color) {
