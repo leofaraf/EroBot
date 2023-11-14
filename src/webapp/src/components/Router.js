@@ -122,7 +122,11 @@ function Router() {
         return result;
     }
 
-    return <div className={`${bg} h-screen p-4 gap-2 text-sm ${secondColor}`}>
+    return <div className={`${window?.Telegram?.WebApp?.themeParams?.bg_color ? (
+        "bg-[" + window.Telegram.WebApp.themeParams.bg_color + "]"
+    ) : (
+        "bg-white"
+    )} h-screen p-4 gap-2 text-sm ${secondColor}`}>
         {model ? (
             <div className={"flex flex-col gap-3"}>
                 {post ? (
