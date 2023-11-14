@@ -121,7 +121,7 @@ function Router() {
         return result;
     }
 
-    return <div className={`${"bg-[#1a313f]"} ${secondColor} h-screen p-4 gap-2 text-sm`}>
+    return <div className={`${bg} h-screen p-4 gap-2 text-sm ${secondColor}`}>
         <p>{bg}, {secondColor}</p>
         {model ? (
             <div className={"flex flex-col gap-3"}>
