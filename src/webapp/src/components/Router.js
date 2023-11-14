@@ -33,7 +33,7 @@ function Router() {
     useEffect(() => {
         console.log(window)
         if (window?.Telegram?.WebApp?.colorScheme && window.Telegram.WebApp.colorScheme !== "light") {
-            setBg("bg-[#1a313f]")
+            setBg("bg-[#475A65]")
             setSecondColor("text-white")
         }
         // if (window?.Telegram?.WebApp?.themeParams?.bg_color) {
@@ -123,7 +123,6 @@ function Router() {
     }
 
     return <div className={`${bg} h-screen p-4 gap-2 text-sm ${secondColor}`}>
-        <p>{bg}, {secondColor}</p>
         {model ? (
             <div className={"flex flex-col gap-3"}>
                 {post ? (
