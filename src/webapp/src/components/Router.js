@@ -60,7 +60,7 @@ function Router() {
                             setUser(json)
                         })
                     } else {
-                        setUser(null) // need for run background hook
+                        setUser("test for bg") // need for run background hook
                     }
                 })
         }
